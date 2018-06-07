@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Jun  7 14:59:08 2018
-
-@author: mattzheng
-"""
-
 #-*- coding: utf-8 -*-
 from __future__ import print_function
 import pandas as pd

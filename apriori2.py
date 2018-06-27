@@ -1,10 +1,6 @@
 """
-Description     : Simple Python implementation of the Apriori Algorithm
-
-Usage:
-    $python apriori.py -f DATASET.csv -s minSupport  -c minConfidence
-
-    $python apriori.py -f DATASET.csv -s 0.15 -c 0.6
+与apriori唯一不同的是:runApriori()函数，新增了提升度的计算
+同时生成的表格之中，有每两对内容的：支持度、置信度、提升度
 """
 
 import sys

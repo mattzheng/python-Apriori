@@ -55,7 +55,7 @@ def getItemSetTransactionList(data_iterator):
     return itemSet, transactionList
 
 
-def runApriori(data_iter, minSupport, minConfidence,minLift = 0):
+def runApriori(data_iter, minSupport, minConfidence,minLift = 0,tuples =2):
     """
     run the apriori algorithm. data_iter is a record iterator
     Return both:
@@ -102,19 +102,20 @@ def runApriori(data_iter, minSupport, minConfidence,minLift = 0):
     print('Calculation the pretuple words and confidence ... ')
     for key, value in list(largeSet.items())[1:]:
         for item in value:
-            _subsets = map(frozenset, [x for x in subsets(item)])
-            for element in _subsets:
-                remain = item.difference(element)
-                if len(remain) > 0:
-                    confidence = getSupport(item)/getSupport(element)
-                    #lift = getSupport(item)/( getSupport(element) * getSupport(remain))
-                    lift = confidence / getSupport(remain)
-                    self_support = getSupport(item)
-                    if self_support >= minSupport:
-                        if confidence >= minConfidence:
-                            if confidence >= minLift:
-                                toRetRules.append(((tuple(element), tuple(remain)),
-                                                   self_support,confidence,lift))
+            if len(item) <= tuples:
+                _subsets = map(frozenset, [x for x in subsets(item)])
+                for element in _subsets:
+                    remain = item.difference(element)
+                    if len(remain) > 0:
+                        confidence = getSupport(item)/getSupport(element)
+                        #lift = getSupport(item)/( getSupport(element) * getSupport(remain))
+                        lift = confidence / getSupport(remain)
+                        self_support = getSupport(item)
+                        if self_support >= minSupport:
+                            if confidence >= minConfidence:
+                                if confidence >= minLift:
+                                    toRetRules.append(((tuple(element), tuple(remain)),tuple(item),
+                                                       self_support,confidence,lift))
     return toRetItems, toRetRules
 
 
@@ -153,23 +154,25 @@ def transferDataFrame(items, rules,removal = True):
     
     # 有向
     rules_data = pd.DataFrame(rules)
-    rules_data.columns = ['word','support','confidence','lift']
+    rules_data.columns = ['word','item','support','confidence','lift']
     rules_data['word_x'] = list(map(lambda x :x[0][0], rules_data.word))
     rules_data['word_y'] = list(map(lambda x :x[1][0], rules_data.word))
+    rules_data['item_len'] = list(map(len,rules_data['item']))
     
     # 去重
     if removal:
         rules_data['word_xy'] = list(map(lambda x : ''.join(list(set([x[0][0],x[1][0]]))), rules_data.word))
         rules_data = rules_data.drop_duplicates(['word_xy'])   
     
-    return items_data,rules_data[['word_x','word_y','support','confidence','lift']]
+    return items_data,rules_data[['word_x','word_y','item','item_len','support','confidence','lift']]
+
 
 if __name__ == "__main__":
     # ------------ 1 本地直接导入  ------------
     inFile = dataFromFile('INTEGRATED-DATASET.csv',extra = False)
     minSupport = 0.15
     minConfidence = 0.3
-    items, rules = runApriori(inFile, minSupport, minConfidence)
+    items, rules = runApriori(inFile, minSupport, minConfidence,tuples = 2)
     #     - items (tuple, support)
     #     - rules ((pretuple, posttuple), confidence)
     
@@ -181,7 +184,7 @@ if __name__ == "__main__":
     minSupport = 0.0
     minConfidence = 0.0
     minLift = 0.0
-    items, rules = runApriori(inFile, minSupport, minConfidence,minLift)
+    items, rules = runApriori(inFile, minSupport, minConfidence,minLift,tuples = 2)
     print('--------items number is: %s , rules number is : %s--------'%(len(items),len(rules)))
     
     # ------------ print函数 ------------

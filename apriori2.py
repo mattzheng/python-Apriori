@@ -146,7 +146,6 @@ def dataFromFile(fname,extra = False):
             
 def transferDataFrame(items, rules,removal = True):
     '''把内容转变为dataframe格式'''
-    
     # 无向
     items_data = pd.DataFrame(items)
     items_data.columns = ['word','support']
@@ -155,8 +154,8 @@ def transferDataFrame(items, rules,removal = True):
     # 有向
     rules_data = pd.DataFrame(rules)
     rules_data.columns = ['word','item','support','confidence','lift']
-    rules_data['word_x'] = list(map(lambda x :x[0][0], rules_data.word))
-    rules_data['word_y'] = list(map(lambda x :x[1][0], rules_data.word))
+    rules_data['word_x'] = list(map(lambda x : x[0][0] if len(x[0])==1 else x[0], rules_data.word))
+    rules_data['word_y'] = list(map(lambda x : x[1][0] if len(x[1])==1 else x[1], rules_data.word))
     rules_data['item_len'] = list(map(len,rules_data['item']))
     
     # 去重

@@ -8,6 +8,16 @@ Python,两款Apriori算法实践与比较，基于今日头条数据的练习题
 
 ![这里写图片描述](https://img-blog.csdn.net/20180607153342772?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3NpbmF0XzI2OTE3Mzgz/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
 
+----------
+
+### 20180627更新
+
+新更新了apriori2.py,之前几个库都是只有支持度以及置信度，没有提升度,笔者在第一套关联规则算法上，略微修改了code加了提升度的计算。
+
+目前可以输出三个字段的指标。
+
+
+----------
 
 **在R语言里面有非常好的package，可见我之前的博客：**
 [R语言实现关联规则与推荐算法(学习笔记)](https://blog.csdn.net/sinat_26917383/article/details/50662709)

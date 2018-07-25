@@ -24,6 +24,30 @@ Python,两款Apriori算法实践与比较，基于今日头条数据的练习题
 
 同时在'transferDataFrame'输出的时候，也会多出：'item'信息以及'item_len'，item_len代表其元组数量。
 
+### 20180725更新
+
+apriori会经常遇到超大集合，一般最耗时的部分在`returnItemsWithMinSupport`生成关联对环节，有可能一循环就是10W+，导致内存卡爆以及时间不好估计。
+笔者这边目前的两个策略是：
+
+ - 调整`minSupport`，先从大的往下调整，0.8->0.2；
+ - 修改`runApriori`中的：
+
+```
+k = 2
+while(k < 5):
+    largeSet[k-1] = currentLSet
+    currentLSet = joinSet(currentLSet, k)
+    currentCSet = returnItemsWithMinSupport(currentLSet,
+                                            transactionList,
+                                            minSupport,
+                                            freqSet)
+    currentLSet = currentCSet
+    k = k + 1
+    print('currentLSet len is %s'%len(currentLSet))
+```
+
+通过调整K观察生成关联对，笔者在尝试的时候，K=5，就会 6W+的关联对，基本控制在K=2/3/4即可。
+
 
 ----------
 

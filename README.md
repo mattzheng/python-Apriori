@@ -10,6 +10,16 @@ Python,两款Apriori算法实践与比较，基于今日头条数据的练习题
 
 ----------
 
+### 20200912更新
+
+更新apriori_4.py
+
+新增一些过长时间执行的注释；
+
+新增`while(currentLSet != set([])) and k<= tuples :`之前的code没有严格按照tuples约束
+
+`runApriori(self,data_iter, minSupport, minConfidence,minLift = 0,tuples =2,count = 100000)`中的count,如果内容太多break的时候会卡顿
+
 ### 20190705更新
 更新了apriori3.py
 
